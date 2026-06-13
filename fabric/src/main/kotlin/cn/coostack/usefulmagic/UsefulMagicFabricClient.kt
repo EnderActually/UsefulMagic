@@ -67,16 +67,23 @@ object UsefulMagicFabricClient : ClientModInitializer {
     }
 
     fun loadKeyBindings() {
-        UsefulMagicClient.loadKeyBindings(
-            KeyBindingHelper.registerKeyBinding(
-                KeyMapping(
-                    "key.friend_ui.open",
-                    InputConstants.Type.KEYSYM,
-                    GLFW.GLFW_KEY_J,
-                    "category.ui.friend"
-                )
+        val friendBinding = KeyBindingHelper.registerKeyBinding(
+            KeyMapping(
+                "key.friend_ui.open",
+                InputConstants.Type.KEYSYM,
+                GLFW.GLFW_KEY_J,
+                "category.usefulmagic.keys"
             )
         )
+        val toggleManaBarBinding = KeyBindingHelper.registerKeyBinding(
+            KeyMapping(
+                "key.usefulmagic.toggle_mana_bar",
+                InputConstants.Type.KEYSYM,
+                GLFW.GLFW_KEY_M,
+                "category.usefulmagic.keys"
+            )
+        )
+        UsefulMagicClient.loadKeyBindings(friendBinding, toggleManaBarBinding)
         ClientTickEvents.END_CLIENT_TICK.register {
             UsefulMagicClient.tickClient()
         }

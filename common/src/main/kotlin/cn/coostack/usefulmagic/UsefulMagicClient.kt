@@ -5,6 +5,7 @@ import cn.coostack.cooparticlesapi.particles.control.group.ClientParticleGroupMa
 import cn.coostack.cooparticlesapi.renderer.client.ClientRenderEntityManager
 import cn.coostack.cooparticlesapi.renderer.client.ShaderPipeManagers
 import cn.coostack.usefulmagic.gui.friend.FriendManagerScreen
+import cn.coostack.usefulmagic.config.ClientConfig
 import cn.coostack.usefulmagic.particles.emitters.UsefulMagicEmitters
 import cn.coostack.usefulmagic.particles.fall.style.GuildCircleStyle
 import cn.coostack.usefulmagic.particles.fall.style.SkyFallingStyle
@@ -56,14 +57,38 @@ import net.minecraft.client.Minecraft
 
 object UsefulMagicClient {
     lateinit var friendUIBinding: KeyMapping
+    lateinit var toggleManaBarBinding: KeyMapping
+    var manaBarVisible: Boolean = true
 
     fun init() {
+        manaBarVisible = ClientConfig.loadManaBarVisible()
         loadParticleStyles()
         handleRenderEntity()
     }
 
-    fun loadKeyBindings(key: KeyMapping) {
-        friendUIBinding = key
+    fun loadKeyBindings(friendKey: KeyMapping, toggleManaBarKey: KeyMapping) {
+        friendUIBinding = friendKey
+        toggleManaBarBinding = toggleManaBarKey
+    }
+
+    fun tickClient() {
+        if (toggleManaBarBinding.consumeClick()) {
+            manaBarVisible = !manaBarVisible
+            ClientConfig.saveManaBarVisible(manaBarVisible)
+            val messageKey = if (manaBarVisible) {
+                "message.usefulmagic.mana_bar.enabled"
+            } else {
+                "message.usefulmagic.mana_bar.disabled"
+            }
+            Minecraft.getInstance().player?.displayClientMessage(net.minecraft.network.chat.Component.translatable(messageKey), false)
+        }
+        if (friendUIBinding.isDown) {
+            Minecraft.getInstance().setScreen(FriendManagerScreen())
+        }
+    }
+
+    fun shouldShowManaBar(): Boolean {
+        return manaBarVisible
     }
 
     private fun loadParticleStyles() {

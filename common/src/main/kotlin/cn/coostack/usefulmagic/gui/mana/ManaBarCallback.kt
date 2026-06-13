@@ -1,6 +1,7 @@
 package cn.coostack.usefulmagic.gui.mana
 
 import cn.coostack.usefulmagic.UsefulMagic
+import cn.coostack.usefulmagic.UsefulMagicClient
 import cn.coostack.usefulmagic.managers.client.ClientManaManager
 import com.mojang.blaze3d.systems.RenderSystem
 import net.minecraft.client.Minecraft
@@ -25,7 +26,7 @@ object ManaBarCallback {
     ) {
         val client = Minecraft.getInstance()
         val player = client.player ?: return
-        if (player.isCreative || player.isSpectator) {
+        if (!UsefulMagicClient.shouldShowManaBar() || player.isCreative || player.isSpectator) {
             return
         }
         // 消耗

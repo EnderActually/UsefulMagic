@@ -54,14 +54,21 @@ import org.lwjgl.glfw.GLFW
 object ClientInitializedListener {
     @SubscribeEvent
     fun onKeybinding(event: RegisterKeyMappingsEvent) {
-        val binding = KeyMapping(
+        val friendBinding = KeyMapping(
             "key.friend_ui.open",
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_J,
-            "category.ui.friend"
+            "category.usefulmagic.keys"
         )
-        event.register(binding)
-        UsefulMagicClient.loadKeyBindings(binding)
+        val toggleManaBarBinding = KeyMapping(
+            "key.usefulmagic.toggle_mana_bar",
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_M,
+            "category.usefulmagic.keys"
+        )
+        event.register(friendBinding)
+        event.register(toggleManaBarBinding)
+        UsefulMagicClient.loadKeyBindings(friendBinding, toggleManaBarBinding)
     }
 
     @SubscribeEvent
