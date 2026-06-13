@@ -1,6 +1,7 @@
 package cn.coostack.usefulmagic.gui.mana
 
 import cn.coostack.usefulmagic.UsefulMagic
+import cn.coostack.usefulmagic.UsefulMagicClient
 import cn.coostack.usefulmagic.extend.mana
 import cn.coostack.usefulmagic.extend.maxMana
 import cn.coostack.usefulmagic.items.consumer.ManaRevive
@@ -32,7 +33,7 @@ object ManaBarCallback {
     ) {
         val client = Minecraft.getInstance()
         val player = client.player ?: return
-        if (player.isCreative || player.isSpectator) {
+        if (!UsefulMagicClient.shouldShowManaBar() || player.isCreative || player.isSpectator) {
             return
         }
         var shouldRender = false

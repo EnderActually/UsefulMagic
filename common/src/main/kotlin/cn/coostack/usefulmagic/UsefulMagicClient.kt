@@ -7,9 +7,12 @@ import cn.coostack.usefulmagic.gui.friend.FriendManagerScreen
 import cn.coostack.usefulmagic.utils.ParticleOption
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
+import net.minecraft.network.chat.Component
 
 object UsefulMagicClient {
     lateinit var friendUIBinding: KeyMapping
+    lateinit var toggleManaBarBinding: KeyMapping
+    var manaBarVisible: Boolean = true
     private var renderEntitiesInitialized = false
     private var renderEntitiesPendingInit = false
 
@@ -21,16 +24,30 @@ object UsefulMagicClient {
         renderEntitiesPendingInit = true
     }
 
-    fun loadKeyBindings(key: KeyMapping) {
-        friendUIBinding = key
+    fun loadKeyBindings(friendKey: KeyMapping, toggleManaBarKey: KeyMapping) {
+        friendUIBinding = friendKey
+        toggleManaBarBinding = toggleManaBarKey
     }
 
     fun tickClient() {
         ensureRenderEntitiesInitialized()
         val minecraft = Minecraft.getInstance()
+        if (toggleManaBarBinding.consumeClick()) {
+            manaBarVisible = !manaBarVisible
+            val messageKey = if (manaBarVisible) {
+                "message.usefulmagic.mana_bar.enabled"
+            } else {
+                "message.usefulmagic.mana_bar.disabled"
+            }
+            minecraft.player?.displayClientMessage(Component.translatable(messageKey), false)
+        }
         if (friendUIBinding.isDown) {
             minecraft.setScreen(FriendManagerScreen())
         }
+    }
+
+    fun shouldShowManaBar(): Boolean {
+        return manaBarVisible
     }
 
     private fun ensureRenderEntitiesInitialized() {
