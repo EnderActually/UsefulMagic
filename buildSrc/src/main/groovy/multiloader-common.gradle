@@ -41,7 +41,16 @@ repositories {
                     url = 'https://maven.neoforged.net/releases'
                 }
         )
-        filter { includeGroup('org.parchmentmc.data') }
+        filter { includeGroupAndSubgroups('org.parchmentmc.data') }
+    }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "NeoForge"
+                url = 'https://maven.neoforged.net/releases'
+            }
+        }
+        filter { includeGroupAndSubgroups('net.neoforged') }
     }
     maven {
         name = 'BlameJared'
